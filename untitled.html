@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Album Kenangan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            background-color: white;
+            padding: 20px;
+            border: 5px solid #007bff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            flex-wrap: wrap;
+        }
+        .title {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .title img {
+            height: 50px;
+            width: 50px;
+            margin-right: 10px;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+        .title h1 {
+            margin: 0;
+            font-size: 24px;
+            white-space: nowrap;
+        }
+        .search-box {
+            position: relative;
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+            margin-left: 10px;
+        }
+        .search-box input {
+            width: 100%;
+            max-width: 500px;
+            padding: 10px 40px 10px 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+            background-color: #f1f1f1;
+            box-sizing: border-box;
+        }
+        .search-box .search-icon {
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            font-size: 20px;
+            color: #888;
+        }
+        .categories {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .category {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .category:hover {
+            background-color: #0056b3;
+        }
+        .category.active {
+            background-color: #0056b3;
+        }
+        .album {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .photo, .video {
+            width: 100%;
+            max-width: 300px;
+            margin: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+            background-color: white;
+            cursor: pointer;
+        }
+        .photo:hover, .video:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+        .photo img, .video video {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+        .description {
+            margin-top: 10px;
+        }
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 300px;
+            margin: 20px auto;
+        }
+        .nav-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+        .nav-button:hover {
+            background-color: #0056b3;
+        }
+        .page-number {
+            font-size: 16px;
+        }
+        .footer {
+            width: 90%;
+            max-width: 1200px;
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .social-media {
+            display: flex;
+            align-items: center;
+        }
+        .social-media a {
+            color: white;
+            font-size: 24px;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+        .promotion {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .promotion img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .promotion h2 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            color: #007bff;
+            margin: 15px 0 0 0;
+        }
+        .license {
+            font-size: 14px;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .popup-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 80%;
+            max-height: 80%;
+            overflow: auto;
+            text-align: center;
+            position: relative;
+        }
+        .popup-content img, .popup-content video {
+            max-width: 100%;
+            max-height: 500px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+        .popup-content h2 {
+            margin: 10px 0;
+        }
+        .popup-content p {
+            font-size: 16px;
+        }
+        .popup-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: transparent;
+            border: none;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+        }
+        .popup-nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: transparent;
+            border: none;
+            font-size: 50px;
+            color: white;
+            cursor: pointer;
+        }
+        .popup-nav-button.prev {
+            left: 20px;
+        }
+        .popup-nav-button.next {
+            right: 20px;
+        }
+        .popup-icons {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .popup-icons a {
+            margin: 0 10px;
+            color: #007bff;
+            font-size: 24px;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .popup-icons a:hover {
+            color: #0056b3;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .search-box {
+                width: 100%;
+                margin-top: 10px;
+                margin-left: 0;
+                justify-content: center;
+            }
+            .search-box input {
+                max-width: 100%;
+            }
+            .navigation {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 10px 5px;
+            }
+            .title h1 {
+                font-size: 20px;
+            }
+            .search-box input {
+                padding: 10px 35px 10px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">
+                <img src="https://telegra.ph/file/f9838698d86d95b5850da.jpg" alt="Logo">
+                <h1>ALBUM KENANGAN SERVER</h1>
+            </div>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Cari foto kenangan sebelumnya..." oninput="search()">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+        </div>
+        <div class="categories">
+            <button class="category active" onclick="filterCategory('all')">Semua</button>
+            <button class="category" onclick="filterCategory('photo')">Gambar</button>
+            <button class="category" onclick="filterCategory('video')">Video</button>
+            <button class="category" onclick="filterCategory('random')">Random</button>
+        </div>
+        <div class="promotion">
+            <img src="https://telegra.ph/file/a6e8f6d5a23aa481e80e5.jpg" alt="Promosi">
+            <h2>Daftar foto dan video atau momen saat di server</h2>
+        </div>
+        <div class="album" id="album"></div>
+        <div class="navigation">
+            <button class="nav-button" onclick="navigate(-1)">&#60;</button>
+            <span class="page-number" id="pageNumber">1</span>
+            <button class="nav-button" onclick="navigate(1)">&#62;</button>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="social-media">
+            <a href="https://www.youtube.com/@alexpakel" target="_blank"><i class="fab fa-youtube"></i></a>
+            <a href="https://tiktok.com" target="_blank"><i class="fab fa-tiktok"></i></a>
+            <a href="https://sociabuzz.com/alexpakell" target="_blank"><i class="fas fa-globe"></i></a>
+        </div>
+        <div class="license">
+            &copy; 2020 - 2024 Album server. 
+        </div>
+    </div>
+
+    <div class="popup" id="popup">
+        <button class="popup-close" onclick="closePopup()">&times;</button>
+        <button class="popup-nav-button prev" onclick="navigatePopup(-1)">&#60;</button>
+        <div class="popup-content" id="popupContent">
+            <!-- Konten popup akan dimuat di sini -->
+        </div>
+        <button class="popup-nav-button next" onclick="navigatePopup(1)">&#62;</button>
+    </div>
+
+    <script>
+        const media = [
+            { type: 'photo', src: 'foto/1.jpg', title: 'Render 3D', description: '🙂' },
+            { type: 'photo', src: 'foto/2.jpg', title: 'FOTBAR PERTAMA', description: '🙂' },
+            { type: 'photo', src: 'foto/3.jpg', title: 'FOTBAR KE DUA', description: '' },
+            { type: 'photo', src: 'foto/4.jpg', title: 'DUO BUCIN', description: '' },
+            { type: 'photo', src: 'foto/5.jpg', title: 'LUFFY DAN ZORO', description: '' },
+            { type: 'photo', src: 'foto/6.jpg', title: 'BOCAH PRAMUKA', description: '' },
+            { type: 'photo', src: 'foto/7.jpg', title: 'CEWEK SESAD 🗿', description: '' },
+            { type: 'photo', src: 'foto/8.jpg', title: 'GK TAU 🗿', description: '' },
+            { type: 'photo', src: 'foto/9.jpg', title: 'MANCING PART 1', description: '' },
+            { type: 'photo', src: 'foto/10.jpg', title: 'FOTBAR RUMAH POHON', description: '' },
+            { type: 'photo', src: 'foto/11.jpg', title: 'FOTBAR SERVER GABUT', description: '' },
+            { type: 'photo', src: 'foto/12.jpg', title: 'FOTBAR KE 1 LANDFOX', description: '' },
+            { type: 'photo', src: 'foto/13.jpg', title: 'BARUDAK VILLAGER', description: '' },
+            { type: 'photo', src: 'foto/14.jpg', title: '!?', description: '' },
+            { type: 'photo', src: 'foto/15.jpg', title: 'FOTBAR KE 2 LANDFOX', description: '' },
+            { type: 'photo', src: 'foto/16.jpg', title: 'WIBU 🗿', description: '' },
+            { type: 'photo', src: 'foto/17.jpg', title: 'EVENT WARDEN LANDFOX', description: '' },
+            { type: 'photo', src: 'foto/18.jpg', title: 'ADA BATANGNYA 🤨', description: '' },
+            { type: 'photo', src: 'foto/19.jpg', title: 'FOTBAR KE 3 LANDFOX', description: '' },
+            { type: 'photo', src: 'foto/20.jpg', title: 'FOTBAR KE 4 LANDFOX', description: '' },
+            { type: 'photo', src: 'foto/21.jpg', title: 'FOTBAR KE 5 LANDFOX', description: '' },
+            { type: 'photo', src: 'foto/22.jpg', title: 'NIKAHAN 🗿', description: '' },
+            { type: 'photo', src: 'foto/23.jpg', title: 'GACHA MOMEN', description: '' },
+            { type: 'photo', src: 'foto/24.jpg', title: 'GK TAU LUPA', description: '' },
+            { type: 'photo', src: 'foto/25.jpg', title: '🤨', description: '' },
+            { type: 'photo', src: 'foto/26.jpg', title: 'FOTBAR PENUTUPAN LANDFOX', description: '' },
+            { type: 'photo', src: 'foto/27.jpg', title: 'END LANDFOX S1', description: '' },
+
+            { type: 'video', src: '1.mp4', title: 'JJ', description: '' },
+            { type: 'video', src: '2.mp4', title: '?!', description: '' },
+            // Tambahkan data foto dan video lainnya di sini
+        ];
+
+        let filteredMedia = [...media];
+        let currentPage = 0;
+        let currentPopupIndex = -1;
+        const itemsPerPage = 10;
+        const album = document.getElementById('album');
+        const pageNumber = document.getElementById('pageNumber');
+        const popup = document.getElementById('popup');
+        const popupContent = document.getElementById('popupContent');
+
+        function displayMedia() {
+            album.innerHTML = '';
+            const start = currentPage * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageMedia = filteredMedia.slice(start, end);
+
+            pageMedia.forEach(item => {
+                const mediaDiv = document.createElement('div');
+                mediaDiv.className = item.type;
+                mediaDiv.setAttribute('data-title', item.title);
+                mediaDiv.setAttribute('data-description', item.description);
+                
+                if (item.type === 'photo') {
+                    mediaDiv.innerHTML = `
+                        <img src="${item.src}" alt="${item.title}">
+                        <div class="description">
+                            <strong>${item.title}</strong>
+                            <p>${item.description}</p>
+                        </div>
+                    `;
+                } else if (item.type === 'video') {
+                    mediaDiv.innerHTML = `
+                        <video controls poster="${item.src}">
+                            <source src="${item.src}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <div class="description">
+                            <strong>${item.title}</strong>
+                            <p>${item.description}</p>
+                        </div>
+                    `;
+                }
+                
+                mediaDiv.onclick = () => openPopup(item);
+                album.appendChild(mediaDiv);
+            });
+
+            pageNumber.textContent = currentPage + 1;
+        }
+
+        function search() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            filteredMedia = media.filter(item => 
+                item.title.toLowerCase().includes(input) || item.description.toLowerCase().includes(input)
+            );
+            currentPage = 0;
+            displayMedia();
+        }
+
+        function filterCategory(category) {
+            document.querySelectorAll('.category').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.querySelector(`.category[onclick="filterCategory('${category}')"]`).classList.add('active');
+
+            if (category === 'photo') {
+                filteredMedia = media.filter(item => item.type === 'photo');
+            } else if (category === 'video') {
+                filteredMedia = media.filter(item => item.type === 'video');
+            } else if (category === 'random') {
+                filteredMedia = media.sort(() => Math.random() - 0.5);
+            } else {
+                filteredMedia = [...media];
+            }
+            currentPage = 0;
+            displayMedia();
+        }
+
+        function navigate(direction) {
+            const totalPages = Math.ceil(filteredMedia.length / itemsPerPage);
+            currentPage = (currentPage + direction + totalPages) % totalPages;
+            displayMedia();
+        }
+
+        function openPopup(item) {
+            currentPopupIndex = filteredMedia.indexOf(item);
+            updatePopupContent(item);
+            popup.style.display = 'flex';
+        }
+
+        function closePopup() {
+            popup.style.display = 'none';
+        }
+
+        function navigatePopup(direction) {
+            const totalItems = filteredMedia.length;
+            currentPopupIndex = (currentPopupIndex + direction + totalItems) % totalItems;
+            const item = filteredMedia[currentPopupIndex];
+            updatePopupContent(item);
+        }
+
+        function updatePopupContent(item) {
+            popupContent.innerHTML = `
+                ${item.type === 'photo' ? `<img src="${item.src}" alt="${item.title}">` : `<video controls><source src="${item.src}" type="video/mp4"></video>`}
+                <h2>${item.title}</h2>
+                <p>${item.description}</p>
+                <div class="popup-icons">
+                    <a href="#"><i class="fas fa-thumbs-up"></i></a>
+                    <a href="${item.src}" download><i class="fas fa-download"></i></a>
+                    <a href="#"><i class="fas fa-share"></i></a>
+                </div>
+            `;
+        }
+
+        // Initialize the album to show the first set of photos and videos
+        displayMedia();
+    </script>
+</body>
+</html>
